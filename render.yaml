@@ -1,0 +1,46 @@
+# Render Blueprint for a single-instance Misskey server.
+# The persistent disk, database, and Key Value instance are paid resources.
+services:
+  - type: web
+    name: dmsky
+    runtime: docker
+    branch: develop
+    region: singapore
+    plan: 2c-4g
+    dockerCommand: bash scripts/render-start.sh
+    healthCheckPath: /healthz
+    maxShutdownDelaySeconds: 300
+    disk:
+      name: dmsky-files
+      mountPath: /misskey/files
+      sizeGB: 10
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MK_DISABLE_CLUSTERING
+        value: "1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: dmsky-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: dmsky-redis
+          property: connectionString
+      - key: DMSKY_SETUP_PASSWORD
+        generateValue: true
+
+  - type: keyvalue
+    name: dmsky-redis
+    region: singapore
+    plan: 256mb
+    ipAllowList: []
+    maxmemoryPolicy: noeviction
+    persistenceMode: journal-snapshot
+
+databases:
+  - name: dmsky-db
+    region: singapore
+    plan: 0.5c-1g
+    ipAllowList: []
