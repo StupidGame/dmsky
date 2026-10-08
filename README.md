@@ -9,6 +9,12 @@
 
 ---
 
+## DMSKY のデプロイ
+
+[無料の Oracle Cloud Always Free + DuckDNS 手順](./docs/free-oci-deployment.md) と [Ubuntu インストーラー](./scripts/install-dmsky-ubuntu.md) を用意しています。
+
+---
+
 <a href="https://misskey-hub.net/servers/">
 		<img src="https://custom-icon-badges.herokuapp.com/badge/find_an-instance-acea31?logoColor=acea31&style=for-the-badge&logo=misskey&labelColor=363B40" alt="find an instance"/></a>
 

@@ -17,24 +17,30 @@ readonly DB_USER='dmsky'
 
 domain=''
 email=''
+duckdns_token_file=''
 check_only=false
 
 usage() {
 	cat <<'EOF'
-Usage: sudo bash scripts/install-dmsky-ubuntu.sh [--domain example.com] [--email admin@example.com] [--check]
+Usage: sudo bash scripts/install-dmsky-ubuntu.sh [--domain example.com] [--email admin@example.com] [--duckdns-token-file /root/duckdns-token] [--check]
 
 Installs DMSKY from the public develop branch on a fresh Ubuntu 24.04 server.
-It sets up PostgreSQL, Redis, Node.js 24, pnpm, systemd, Nginx and Let's Encrypt.
-The domain must already resolve to this server, with ports 80 and 443 open.
+It sets up PostgreSQL, Redis, Node.js 26, pnpm, systemd, Nginx and Let's Encrypt.
+Use --duckdns-token-file with a subdomain under duckdns.org to configure free dynamic DNS.
+Other domains must already resolve to this server. Open ports 80 and 443 first.
 --check runs the non-mutating host checks only.
 EOF
 }
 
 while (($#)); do
 	case "$1" in
-		--domain|--email)
+		--domain|--email|--duckdns-token-file)
 			(($# >= 2)) || { usage >&2; exit 2; }
-			if [[ $1 == --domain ]]; then domain=$2; else email=$2; fi
+			case "$1" in
+				--domain) domain=$2 ;;
+				--email) email=$2 ;;
+				--duckdns-token-file) duckdns_token_file=$2 ;;
+			esac
 			shift 2
 			;;
 		--check) check_only=true; shift ;;
@@ -53,6 +59,10 @@ source /etc/os-release
 [[ ${ID:-} == ubuntu && ${VERSION_ID:-} == 24.04 ]] || fail 'Ubuntu 24.04 is required.'
 [[ $(uname -m) == x86_64 || $(uname -m) == aarch64 ]] || fail 'Only amd64 and arm64 are supported.'
 [[ -d /run/systemd/system ]] || fail 'A running systemd installation is required.'
+memory_kib=$(awk '/^MemTotal:/ { print $2 }' /proc/meminfo)
+(( memory_kib >= 3 * 1024 * 1024 )) || fail 'At least 4 GB of VM memory is recommended; this host is too small to build Misskey.'
+free_disk_kib=$(df -Pk /var/lib | awk 'NR == 2 { print $4 }')
+(( free_disk_kib >= 24 * 1024 * 1024 )) || fail 'At least 24 GB of free disk space is required before installation.'
 [[ ! -e $APP_DIR ]] || fail "$APP_DIR already exists; this installer only handles new installations."
 [[ ! -e /etc/systemd/system/dmsky.service ]] || fail 'dmsky.service already exists.'
 [[ ! -e /etc/nginx/sites-available/dmsky ]] || fail 'The DMSKY Nginx site already exists.'
@@ -67,18 +77,40 @@ if [[ -z $domain ]]; then read -r -p 'Server domain: ' domain; fi
 if [[ -z $email ]]; then read -r -p "Let's Encrypt contact email: " email; fi
 [[ $domain =~ ^[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?$ && $domain == *.* && $domain != *..* ]] || fail 'Enter a valid domain name.'
 [[ $email =~ ^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$ ]] || fail 'Enter a valid email address.'
+if [[ -n $duckdns_token_file ]]; then
+	[[ $domain == *.duckdns.org ]] || fail '--duckdns-token-file requires a duckdns.org subdomain.'
+	duckdns_subdomain=${domain%.duckdns.org}
+	[[ $duckdns_subdomain =~ ^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$ ]] || fail 'Use a single lowercase DuckDNS subdomain.'
+	[[ -f $duckdns_token_file && ! -L $duckdns_token_file ]] || fail 'The DuckDNS token file must be a regular file.'
+	[[ $(stat -c '%u' "$duckdns_token_file") == 0 ]] || fail 'The DuckDNS token file must be owned by root.'
+	duckdns_mode=$(stat -c '%a' "$duckdns_token_file")
+	(( (8#$duckdns_mode & 077) == 0 )) || fail 'The DuckDNS token file must not be readable by other users.'
+	duckdns_token=$(<"$duckdns_token_file")
+	[[ $duckdns_token =~ ^[A-Za-z0-9-]{16,128}$ ]] || fail 'The DuckDNS token file contains an invalid token.'
+fi
 
 step 'Installing base packages'
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y ca-certificates curl gnupg git build-essential ffmpeg python3 openssl postgresql redis-server nginx certbot python3-certbot-nginx
 
-step 'Installing Node.js 24 and pnpm'
+if (( memory_kib < 8 * 1024 * 1024 )) && (( $(awk '/^SwapTotal:/ { print $2 }' /proc/meminfo) < 2 * 1024 * 1024 )); then
+	step 'Adding swap for the Misskey build on a small VM'
+	[[ ! -e /var/lib/dmsky-swap ]] || fail 'Swap file already exists; inspect it before retrying.'
+	fallocate -l 4G /var/lib/dmsky-swap
+	chmod 0600 /var/lib/dmsky-swap
+	mkswap /var/lib/dmsky-swap >/dev/null
+	swapon /var/lib/dmsky-swap
+	printf '/var/lib/dmsky-swap none swap sw 0 0\n' >> /etc/fstab
+fi
+
+step 'Installing Node.js 26 and pnpm'
 install -d -m 0755 /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-printf 'deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main\n' > /etc/apt/sources.list.d/nodesource.list
+printf 'deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_26.x nodistro main\n' > /etc/apt/sources.list.d/nodesource.list
 apt-get update
 apt-get install -y nodejs
+node -e 'const [major, minor] = process.versions.node.split(".").map(Number); if (major !== 26 || minor < 4) process.exit(1)' || fail 'Node.js 26.4.0 or newer is required.'
 npm install --global pnpm@11.25.0
 pnpm_path=$(command -v pnpm)
 
@@ -114,12 +146,46 @@ db:
 redis:
   host: 127.0.0.1
   port: 6379
-id: 'aid'
+id: 'aidx'
 proxyRemoteFiles: true
 signToActivityPubGet: true
 EOF
 chown "$APP_USER:$APP_USER" "$APP_DIR/.config/default.yml"
 printf '%s\n' "$setup_password" > /root/dmsky-setup-password
+
+if [[ -n $duckdns_token_file ]]; then
+	step 'Configuring DuckDNS updates'
+	install -d -m 0700 /etc/dmsky
+	printf 'DUCKDNS_SUBDOMAIN=%s\nDUCKDNS_TOKEN=%s\n' "$duckdns_subdomain" "$duckdns_token" > /etc/dmsky/duckdns.env
+	chmod 0600 /etc/dmsky/duckdns.env
+	install -D -m 0755 "$APP_DIR/scripts/update-duckdns.sh" /usr/local/libexec/dmsky-update-duckdns
+	cat > /etc/systemd/system/dmsky-duckdns.service <<'EOF'
+[Unit]
+Description=Update DMSKY DuckDNS record
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/dmsky/duckdns.env
+ExecStart=/usr/local/libexec/dmsky-update-duckdns
+EOF
+	cat > /etc/systemd/system/dmsky-duckdns.timer <<'EOF'
+[Unit]
+Description=Keep DMSKY DuckDNS record current
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+Unit=dmsky-duckdns.service
+
+[Install]
+WantedBy=timers.target
+EOF
+	systemctl daemon-reload
+	systemctl start dmsky-duckdns.service
+	systemctl enable --now dmsky-duckdns.timer
+fi
 
 step 'Installing dependencies, building and migrating'
 runuser -u "$APP_USER" -- env NODE_ENV=development bash -c "cd '$APP_DIR' && '$pnpm_path' install --frozen-lockfile"

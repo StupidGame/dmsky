@@ -1,6 +1,8 @@
 # DMSKY Ubuntu インストーラー
 
-`install-dmsky-ubuntu.sh` は [Misskey 公式の Ubuntu インストーラー](https://github.com/joinmisskey/bash-install/blob/main/ubuntu.sh) の手順を参考にした、このフォーク用の新規導入スクリプトです。Ubuntu 24.04 の新しいサーバーで、PostgreSQL、Redis、Node.js 24、pnpm、Nginx、HTTPS、systemd サービスを設定します。既存の `/var/lib/dmsky/app` と `dmsky.service` は上書きしません。
+`install-dmsky-ubuntu.sh` は [Misskey 公式の Ubuntu インストーラー](https://github.com/joinmisskey/bash-install/blob/main/ubuntu.sh) の手順を参考にした、このフォーク用の新規導入スクリプトです。Ubuntu 24.04 の新しいサーバーで、PostgreSQL、Redis、Node.js 26、pnpm、Nginx、HTTPS、systemd サービスを設定します。既存の `/var/lib/dmsky/app` と `dmsky.service` は上書きしません。
+
+**月額 0 円で試す場合は [Oracle Cloud Always Free + DuckDNS 手順](../docs/free-oci-deployment.md) を使用してください。** DuckDNS トークンを root 専用ファイルから読み取り、DNS の自動更新を設定します。
 
 実行前にドメインの DNS をサーバーへ向け、ポート 80 と 443 を開いてください。少なくとも 4 GB のメモリを推奨します。
 
