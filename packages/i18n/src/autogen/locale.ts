@@ -1264,6 +1264,96 @@ export interface Locale extends ILocale {
      * 利用規約
      */
     "termsOfService": string;
+    "_dmsky": {
+        /**
+         * CIRCUIT / SOCIAL
+         */
+        "designLabel": string;
+        /**
+         * Powered by
+         */
+        "poweredBy": string;
+        /**
+         * このサイトはMisskeyを改造したDMSKYです。近未来風の画面・独自アイコン・利用規約を追加しています。
+         */
+        "forkNotice": string;
+        /**
+         * DMSKYのソースコードと変更点
+         */
+        "forkSource": string;
+        /**
+         * サーバー管理者が追加した利用規約
+         */
+        "additionalTerms": string;
+        /**
+         * 本規約は、このサーバーの利用に適用されます。登録・利用する方は、以下を確認してください。
+         */
+        "termsIntro": string;
+        /**
+         * Misskey.ioの利用規約を参考に、このサーバー向けに作成しました。Misskey.ioとは別のサービスです。
+         */
+        "termsReference": string;
+        /**
+         * 安全と他者への配慮
+         */
+        "termsSafetyTitle": string;
+        /**
+         * 違法行為、脅迫・嫌がらせ、差別的な攻撃、自傷の助長、他人の個人情報の公開、なりすまし、無断アクセスを禁止します。
+         */
+        "termsSafetyBody": string;
+        /**
+         * スパムと運営妨害
+         */
+        "termsSpamTitle": string;
+        /**
+         * 大量の連続投稿、無関係な宣伝、アカウントの売買、サーバーへの過度な負荷、制限の回避を禁止します。
+         */
+        "termsSpamBody": string;
+        /**
+         * センシティブな内容
+         */
+        "termsSensitiveTitle": string;
+        /**
+         * 閲覧に注意が必要な画像や文章には、適切な閲覧注意設定や内容を隠す機能を使用してください。違法な内容は投稿できません。
+         */
+        "termsSensitiveBody": string;
+        /**
+         * このサーバー固有の禁止事項
+         */
+        "termsTopicsTitle": string;
+        /**
+         * 宗教・政治・投資に関する発言を禁止します。ノート、返信、リノート、プロフィール、チャンネル等での発信も対象です。
+         */
+        "termsTopicsBody": string;
+        /**
+         * ただし、オラクル教団の布教に限り、宗教に関する発言の禁止を適用しません。政治・投資に関する発言にはこの例外を適用しません。
+         */
+        "termsOracleException": string;
+        /**
+         * 違反への対応
+         */
+        "termsModerationTitle": string;
+        /**
+         * 運営は違反を確認した場合、投稿の削除、公開範囲の制限、アカウントの一時停止・凍結・削除など、必要な措置を行うことがあります。
+         */
+        "termsModerationBody": string;
+        /**
+         * 連合とデータ
+         */
+        "termsFederationTitle": string;
+        /**
+         * 公開投稿は連合先のサーバーに複製されることがあり、削除後も完全に消去できない場合があります。投稿前に公開範囲を確認してください。
+         */
+        "termsFederationBody": string;
+        /**
+         * 規約の変更と問い合わせ
+         */
+        "termsChangesTitle": string;
+        /**
+         * 規約を変更するときは、このページで改定内容を案内します。問い合わせはサーバーの連絡先を利用してください。
+         */
+        "termsChangesBody": string;
+    };
     /**
      * 始める
      */

@@ -148,6 +148,10 @@ class ThemeManager extends EventEmitter<ThemeManagerEvents> {
 
 		const colorScheme = this.currentTheme.base === 'dark' ? 'dark' : 'light';
 		window.document.documentElement.dataset.colorScheme = colorScheme;
+		window.document.documentElement.classList.toggle('dmsky-theme', [
+			'a4582ef4-3242-4e29-a91d-92cc45fb1741',
+			'5d2c7a22-5492-4fb6-95b5-ef92e6135c16',
+		].includes(this.currentTheme.id));
 
 		for (const tag of window.document.head.children) {
 			if (tag.tagName === 'META' && tag.getAttribute('name') === 'theme-color') {

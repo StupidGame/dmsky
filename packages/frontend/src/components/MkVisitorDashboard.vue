@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <div v-if="instance" :class="$style.root">
 	<div :class="[$style.main, $style.panel]">
-		<img :src="instance.iconUrl || '/favicon.ico'" alt="" :class="$style.mainIcon"/>
+		<img src="/client-assets/dmsky-emblem.png" alt="" :class="$style.mainIcon"/>
 		<button class="_button _acrylic" :class="$style.mainMenu" @click="showMenu"><i class="ti ti-dots"></i></button>
 		<div :class="$style.mainFg">
 			<h1 :class="$style.mainTitle">
@@ -27,6 +27,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkButton :class="$style.mainAction" full rounded gradate data-testid="signup" style="margin-right: 12px;" @click="signup()">{{ i18n.ts.joinThisServer }}</MkButton>
 				<MkButton :class="$style.mainAction" full rounded type="a" target="_blank" rel="noopener" href="https://misskey-hub.net/servers/">{{ i18n.ts.exploreOtherServers }}</MkButton>
 				<MkButton :class="$style.mainAction" full rounded data-testid="signin" @click="signin()">{{ i18n.ts.login }}</MkButton>
+			</div>
+			<div :class="$style.disclosure">
+				<p>{{ i18n.ts._dmsky.forkNotice }}</p>
+				<nav :aria-label="i18n.ts.instanceInfo">
+					<MkA to="/terms">{{ i18n.ts.termsOfService }}</MkA>
+					<MkA to="/about-misskey">{{ i18n.ts.aboutMisskey }}</MkA>
+					<a href="https://github.com/StupidGame/dmsky" target="_blank" rel="noopener noreferrer">{{ i18n.ts._dmsky.forkSource }}</a>
+				</nav>
 			</div>
 		</div>
 	</div>
@@ -110,9 +118,10 @@ function showMenu(ev: PointerEvent) {
 
 .panel {
 	position: relative;
-	background: var(--MI_THEME-panel);
+	background: linear-gradient(145deg, var(--MI_THEME-panelHeaderBg), var(--MI_THEME-panel) 40%);
+	border: 1px solid var(--MI_THEME-divider);
 	border-radius: var(--MI-radius);
-	box-shadow: 0 12px 32px rgb(0 0 0 / 25%);
+	box-shadow: inset 0 1px color(from var(--MI_THEME-fg) srgb r g b / 0.08), 0 12px 32px var(--MI_THEME-shadow);
 }
 
 .main {
@@ -120,10 +129,10 @@ function showMenu(ev: PointerEvent) {
 }
 
 .mainIcon {
-	width: 85px;
-	margin-top: -47px;
+	width: 110px;
+	margin-top: -62px;
 	vertical-align: bottom;
-	filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+	filter: drop-shadow(0 0 16px var(--MI_THEME-accent));
 }
 
 .mainMenu {
@@ -169,6 +178,22 @@ function showMenu(ev: PointerEvent) {
 
 .mainAction {
 	line-height: 28px;
+}
+
+.disclosure {
+	padding: 0 24px 24px;
+	border-top: 1px solid var(--MI_THEME-divider);
+	text-align: left;
+	font-size: 0.85em;
+	line-height: 1.6;
+
+	nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px 16px;
+	}
+
+	a { color: var(--MI_THEME-link); text-decoration: underline; }
 }
 
 .stats {

@@ -120,11 +120,18 @@ export function openInstanceMenu(ev: PointerEvent) {
 		});
 	}
 
+	menuItems.push({
+		type: 'link',
+		text: i18n.ts.termsOfService,
+		icon: 'ti ti-notebook',
+		to: '/terms',
+	});
+
 	if (instance.tosUrl) {
 		menuItems.push({
 			type: 'a',
-			text: i18n.ts.termsOfService,
-			icon: 'ti ti-notebook',
+			text: i18n.ts._dmsky.additionalTerms,
+			icon: 'ti ti-license',
 			href: instance.tosUrl,
 			target: '_blank',
 		});

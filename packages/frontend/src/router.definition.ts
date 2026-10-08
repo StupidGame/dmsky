@@ -216,6 +216,9 @@ export const ROUTE_DEF = [{
 	component: page(() => import('@/pages/about.vue')),
 	hash: 'initialTab',
 }, {
+	path: '/terms',
+	component: page(() => import('@/pages/terms.vue')),
+}, {
 	path: '/contact',
 	component: page(() => import('@/pages/contact.vue')),
 }, {

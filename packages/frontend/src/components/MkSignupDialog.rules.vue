@@ -36,7 +36,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<template #label>{{ tosPrivacyPolicyLabel }}</template>
 				<template #suffix><i v-if="agreeTosAndPrivacyPolicy" class="ti ti-check" style="color: var(--MI_THEME-success)"></i></template>
 				<div class="_gaps_s">
-					<div v-if="availableTos"><a :href="instance.tosUrl ?? undefined" class="_link" target="_blank">{{ i18n.ts.termsOfService }} <i class="ti ti-external-link"></i></a></div>
+					<MkInfo warn>{{ i18n.ts._dmsky.termsTopicsBody }} {{ i18n.ts._dmsky.termsOracleException }}</MkInfo>
+					<div><a href="/terms" class="_link" target="_blank" rel="noopener noreferrer">{{ i18n.ts.termsOfService }} <i class="ti ti-external-link"></i></a></div>
+					<div v-if="instance.tosUrl"><a :href="instance.tosUrl" class="_link" target="_blank" rel="noopener noreferrer">{{ i18n.ts._dmsky.additionalTerms }} <i class="ti ti-external-link"></i></a></div>
 					<div v-if="availablePrivacyPolicy"><a :href="instance.privacyPolicyUrl ?? undefined" class="_link" target="_blank">{{ i18n.ts.privacyPolicy }} <i class="ti ti-external-link"></i></a></div>
 				</div>
 
@@ -74,7 +76,7 @@ import MkInfo from '@/components/MkInfo.vue';
 import * as os from '@/os.js';
 
 const availableServerRules = instance.serverRules.length > 0;
-const availableTos = instance.tosUrl != null && instance.tosUrl !== '';
+const availableTos = true;
 const availablePrivacyPolicy = instance.privacyPolicyUrl != null && instance.privacyPolicyUrl !== '';
 
 const agreeServerRules = ref(false);

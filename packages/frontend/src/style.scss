@@ -367,6 +367,20 @@ rt {
 	overflow: clip;
 }
 
+html.dmsky-theme {
+	--MI-radius: 8px;
+	background-image: radial-gradient(circle at 80% 10%, color(from var(--MI_THEME-accent) srgb r g b / 0.09), transparent 36%);
+
+	._panel {
+		border: 1px solid var(--MI_THEME-divider);
+		box-shadow: inset 0 1px color(from var(--MI_THEME-fg) srgb r g b / 0.07), 0 10px 28px var(--MI_THEME-shadow);
+	}
+
+	._buttonGradate {
+		box-shadow: 0 0 18px color(from var(--MI_THEME-accent) srgb r g b / 0.24);
+	}
+}
+
 ._margin {
 	margin: var(--MI-margin) 0;
 }

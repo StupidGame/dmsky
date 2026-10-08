@@ -8,7 +8,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.body">
 		<div :class="$style.top">
 			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" @click="openInstanceMenu">
-				<img :src="instance.iconUrl || '/favicon.ico'" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;"/>
+				<img :src="instance.iconUrl || '/client-assets/dmsky-emblem.png'" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;"/>
+				<img v-if="instance.iconUrl" src="/client-assets/dmsky-emblem.png" alt="" :class="$style.brandEmblem"/>
 			</button>
 			<button v-if="!iconOnly" v-tooltip.noDelay.right="i18n.ts.realtimeMode" class="_button" :class="[$style.realtimeMode, store.r.realtimeMode.value ? $style.on : null]" @click="toggleRealtimeMode">
 				<i v-if="store.r.realtimeMode.value" class="ti ti-bolt ti-fw"></i>
@@ -220,6 +221,7 @@ function menuEdit() {
 	overflow-x: clip;
 	overscroll-behavior: contain;
 	background: var(--MI_THEME-navBg);
+	background-image: repeating-linear-gradient(135deg, transparent 0 44px, color(from var(--MI_THEME-accent) srgb r g b / 0.025) 44px 45px);
 	contain: strict;
 
 	/* 画面が縦に長い、設置している項目数が少ないなどの環境においても確実にbottomを最下部に表示するため */
@@ -227,6 +229,18 @@ function menuEdit() {
 	flex-direction: column;
 
 	direction: rtl; /* スクロールバーを左に表示したいため */
+}
+
+.instance { position: relative; }
+
+.brandEmblem {
+	position: absolute;
+	right: 9px;
+	bottom: 7px;
+	width: 22px;
+	height: 22px;
+	object-fit: contain;
+	filter: drop-shadow(0 0 5px var(--MI_THEME-accent));
 }
 
 .top {
@@ -586,7 +600,9 @@ function menuEdit() {
 				left: 0;
 				right: 0;
 				bottom: 0;
-				border-radius: 999px;
+				border-radius: 6px;
+				border-left: 3px solid var(--MI_THEME-accent);
+				box-shadow: inset 0 0 14px color(from var(--MI_THEME-accent) srgb r g b / 0.12);
 				background: var(--MI_THEME-accentedBg);
 			}
 		}

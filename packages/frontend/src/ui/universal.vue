@@ -134,6 +134,7 @@ $widgets-hide-threshold: 1090px;
 	display: flex;
 	flex-direction: column;
 	background: var(--MI_THEME-navBg);
+	background-image: linear-gradient(135deg, color(from var(--MI_THEME-accent) srgb r g b / 0.08), transparent 40%);
 }
 
 .nonTitlebarArea {
@@ -143,7 +144,8 @@ $widgets-hide-threshold: 1090px;
 }
 
 .sidebar {
-	border-right: solid 0.5px var(--MI_THEME-divider);
+	border-right: solid 1px var(--MI_THEME-divider);
+	box-shadow: 3px 0 24px color(from var(--MI_THEME-accent) srgb r g b / 0.06);
 }
 
 .contents {
@@ -177,7 +179,7 @@ $widgets-hide-threshold: 1090px;
 	box-sizing: border-box;
 	overflow: auto;
 	padding: var(--MI-margin) var(--MI-margin) calc(var(--MI-margin) + env(safe-area-inset-bottom, 0px));
-	border-left: solid 0.5px var(--MI_THEME-divider);
+	border-left: solid 1px var(--MI_THEME-divider);
 	background: var(--MI_THEME-bg);
 
 	@media (max-width: $widgets-hide-threshold) {

@@ -5,9 +5,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div v-if="meta" :class="$style.root">
-	<MkFeaturedPhotos :class="$style.bg"/>
+	<div :class="$style.bg" aria-hidden="true"></div>
 	<div :class="$style.logoWrapper">
-		<div :class="$style.poweredBy">Powered by</div>
+		<img src="/client-assets/dmsky-emblem.png" alt="" :class="$style.emblem"/>
+		<div :class="$style.poweredBy">{{ i18n.ts._dmsky.designLabel }} · {{ i18n.ts._dmsky.poweredBy }}</div>
 		<img :src="misskeysvg" :class="$style.misskey"/>
 	</div>
 	<div :class="$style.contents">
@@ -17,10 +18,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import MkFeaturedPhotos from '@/components/MkFeaturedPhotos.vue';
 import misskeysvg from '/client-assets/misskey.svg';
 import MkVisitorDashboard from '@/components/MkVisitorDashboard.vue';
 import { instance as meta } from '@/instance.js';
+import { i18n } from '@/i18n.js';
 </script>
 
 <style lang="scss" module>
@@ -32,11 +33,8 @@ import { instance as meta } from '@/instance.js';
 
 .bg {
 	position: fixed;
-	top: 0;
-	right: 0;
-	width: 100vw;
-	height: 100vh;
-	// 固定レイヤがホイール操作を奪い、コンテンツ列以外の上でページをスクロールできなくなるのを防ぐ (issue #17680)
+	inset: 0;
+	background: linear-gradient(90deg, color(from var(--MI_THEME-bg) srgb r g b / 0.7), transparent 80%), url('/client-assets/dmsky-city.png') center / cover;
 	pointer-events: none;
 }
 
@@ -48,6 +46,14 @@ import { instance as meta } from '@/instance.js';
 	color: #fff;
 	user-select: none;
 	pointer-events: none;
+	text-shadow: 0 2px 12px var(--MI_THEME-shadow);
+}
+
+.emblem {
+	width: 68px;
+	height: 68px;
+	object-fit: contain;
+	filter: drop-shadow(0 0 12px var(--MI_THEME-accent));
 }
 
 .poweredBy {

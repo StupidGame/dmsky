@@ -31,13 +31,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<template #icon><i class="ti ti-info-circle"></i></template>
 				{{ i18n.ts.aboutMisskey }}
 			</FormLink>
-			<FormLink v-if="instance.repositoryUrl || instance.providesTarball" :to="instance.repositoryUrl || `/tarball/misskey-${version}.tar.gz`" external>
+			<FormLink to="https://github.com/StupidGame/dmsky" external>
 				<template #icon><i class="ti ti-code"></i></template>
-				{{ i18n.ts.sourceCode }}
+				{{ i18n.ts._dmsky.forkSource }}
 			</FormLink>
-			<MkInfo v-else warn>
-				{{ i18n.ts.sourceCodeIsNotYetProvided }}
-			</MkInfo>
+			<p>{{ i18n.ts._dmsky.forkNotice }}</p>
 		</div>
 	</FormSection>
 
@@ -80,9 +78,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 						</li>
 					</ol>
 				</MkFolder>
-				<FormLink v-if="instance.tosUrl" :to="instance.tosUrl" external>
+				<FormLink to="/terms">
 					<template #icon><i class="ti ti-license"></i></template>
 					<template #default>{{ i18n.ts.termsOfService }}</template>
+				</FormLink>
+				<FormLink v-if="instance.tosUrl" :to="instance.tosUrl" external>
+					<template #icon><i class="ti ti-license"></i></template>
+					<template #default>{{ i18n.ts._dmsky.additionalTerms }}</template>
 				</FormLink>
 				<FormLink v-if="instance.privacyPolicyUrl" :to="instance.privacyPolicyUrl" external>
 					<template #icon><i class="ti ti-shield-lock"></i></template>

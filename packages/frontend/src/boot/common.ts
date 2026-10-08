@@ -6,8 +6,10 @@
 import { watch, version as vueVersion } from 'vue';
 import { compareVersions } from 'compare-versions';
 import { version, lang, isSafeMode } from '@@/js/config.js';
-import defaultLightTheme from '@@/themes/l-light.json5';
-import defaultDarkTheme from '@@/themes/d-green-lime.json5';
+import defaultLightTheme from '@@/themes/l-dmsky.json5';
+import defaultDarkTheme from '@@/themes/d-dmsky.json5';
+import safeLightTheme from '@@/themes/l-light.json5';
+import safeDarkTheme from '@@/themes/d-green-lime.json5';
 import { storeBootloaderErrors } from '@@/js/store-boot-errors';
 import type { App } from 'vue';
 import widgets from '@/widgets/index.js';
@@ -167,9 +169,9 @@ export async function common(createVue: () => Promise<App<Element>>) {
 	watch(store.r.darkMode, (darkMode) => {
 		const theme = (() => {
 			if (darkMode) {
-				return isSafeMode ? defaultDarkTheme : (prefer.s.darkTheme ?? defaultDarkTheme);
+				return isSafeMode ? safeDarkTheme : (prefer.s.darkTheme ?? defaultDarkTheme);
 			} else {
-				return isSafeMode ? defaultLightTheme : (prefer.s.lightTheme ?? defaultLightTheme);
+				return isSafeMode ? safeLightTheme : (prefer.s.lightTheme ?? defaultLightTheme);
 			}
 		})();
 

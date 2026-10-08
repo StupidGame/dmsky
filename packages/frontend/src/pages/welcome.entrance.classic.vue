@@ -5,12 +5,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <template>
 <div v-if="meta" :class="$style.root">
-	<MkFeaturedPhotos :class="$style.bg"/>
+	<div :class="$style.bg" aria-hidden="true"></div>
 	<XTimeline :class="$style.tl"/>
 	<div :class="$style.shape1"></div>
 	<div :class="$style.shape2"></div>
 	<div :class="$style.logoWrapper">
-		<div :class="$style.poweredBy">Powered by</div>
+		<img src="/client-assets/dmsky-emblem.png" alt="" :class="$style.emblem"/>
+		<div :class="$style.poweredBy">{{ i18n.ts._dmsky.designLabel }} · {{ i18n.ts._dmsky.poweredBy }}</div>
 		<img :src="misskeysvg" :class="$style.misskey"/>
 	</div>
 	<div :class="$style.contents">
@@ -33,12 +34,12 @@ import { ref } from 'vue';
 import * as Misskey from 'misskey-js';
 import XTimeline from './welcome.timeline.vue';
 import MkMarqueeText from '@/components/MkMarqueeText.vue';
-import MkFeaturedPhotos from '@/components/MkFeaturedPhotos.vue';
 import misskeysvg from '/client-assets/misskey.svg';
 import { misskeyApiGet } from '@/utility/misskey-api.js';
 import MkVisitorDashboard from '@/components/MkVisitorDashboard.vue';
 import { getProxiedImageUrl } from '@/utility/media-proxy.js';
 import { instance as meta } from '@/instance.js';
+import { i18n } from '@/i18n.js';
 
 const instances = ref<Misskey.entities.FederationInstance[]>();
 
@@ -64,15 +65,13 @@ misskeyApiGet('federation/instances', {
 	height: 100cqh;
 	overflow: auto;
 	overscroll-behavior: contain;
+	background: var(--MI_THEME-bg);
 }
 
 .bg {
 	position: fixed;
-	top: 0;
-	right: 0;
-	width: 80vw; // 100%からshapeの幅を引いている
-	height: 100vh;
-	// 固定レイヤがホイール操作を奪い、コンテンツ列以外の上でページをスクロールできなくなるのを防ぐ (issue #17680)
+	inset: 0;
+	background: linear-gradient(90deg, color(from var(--MI_THEME-bg) srgb r g b / 0.75), transparent 72%), url('/client-assets/dmsky-city.png') center / cover;
 	pointer-events: none;
 }
 
@@ -100,8 +99,9 @@ misskeyApiGet('federation/instances', {
 	left: 0;
 	width: 100vw;
 	height: 100vh;
-	background: var(--MI_THEME-accent);
+	background: var(--MI_THEME-navBg);
 	clip-path: polygon(0% 0%, 45% 0%, 20% 100%, 0% 100%);
+	opacity: 0.9;
 	pointer-events: none; // 装飾レイヤ。ホイール操作を透過させる (→ .bg 参照)
 }
 .shape2 {
@@ -112,7 +112,7 @@ misskeyApiGet('federation/instances', {
 	height: 100vh;
 	background: var(--MI_THEME-accent);
 	clip-path: polygon(0% 0%, 25% 0%, 35% 100%, 0% 100%);
-	opacity: 0.5;
+	opacity: 0.2;
 	pointer-events: none; // 装飾レイヤ。ホイール操作を透過させる (→ .bg 参照)
 }
 
@@ -124,6 +124,14 @@ misskeyApiGet('federation/instances', {
 	color: #fff;
 	user-select: none;
 	pointer-events: none;
+	text-shadow: 0 2px 12px var(--MI_THEME-shadow);
+}
+
+.emblem {
+	width: 68px;
+	height: 68px;
+	object-fit: contain;
+	filter: drop-shadow(0 0 12px var(--MI_THEME-accent));
 }
 
 .poweredBy {
