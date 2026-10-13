@@ -7,9 +7,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div v-if="meta" :class="$style.root">
 	<div :class="$style.bg" aria-hidden="true"></div>
 	<div :class="$style.logoWrapper">
-		<img src="/client-assets/dmsky-emblem.png" alt="" :class="$style.emblem"/>
+		<img src="/client-assets/dmsky-icon.svg" alt="" :class="$style.emblem"/>
 		<div :class="$style.poweredBy">{{ i18n.ts._dmsky.designLabel }} · {{ i18n.ts._dmsky.poweredBy }}</div>
-		<img :src="misskeysvg" :class="$style.misskey"/>
+		<img :src="dmskyWordmark" alt="DMSKY" :class="$style.misskey"/>
 	</div>
 	<div :class="$style.contents">
 		<MkVisitorDashboard/>
@@ -18,7 +18,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import misskeysvg from '/client-assets/misskey.svg';
+import dmskyWordmark from '/client-assets/misskey.svg';
 import MkVisitorDashboard from '@/components/MkVisitorDashboard.vue';
 import { instance as meta } from '@/instance.js';
 import { i18n } from '@/i18n.js';

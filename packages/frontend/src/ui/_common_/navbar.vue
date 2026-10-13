@@ -8,8 +8,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.body">
 		<div :class="$style.top">
 			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" @click="openInstanceMenu">
-				<img :src="instance.iconUrl || '/client-assets/dmsky-emblem.png'" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;"/>
-				<img v-if="instance.iconUrl" src="/client-assets/dmsky-emblem.png" alt="" :class="$style.brandEmblem"/>
+				<img :src="instance.iconUrl || '/client-assets/dmsky-icon.svg'" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;"/>
+				<img v-if="instance.iconUrl" src="/client-assets/dmsky-icon.svg" alt="" :class="$style.brandEmblem"/>
 			</button>
 			<button v-if="!iconOnly" v-tooltip.noDelay.right="i18n.ts.realtimeMode" class="_button" :class="[$style.realtimeMode, store.r.realtimeMode.value ? $style.on : null]" @click="toggleRealtimeMode">
 				<i v-if="store.r.realtimeMode.value" class="ti ti-bolt ti-fw"></i>

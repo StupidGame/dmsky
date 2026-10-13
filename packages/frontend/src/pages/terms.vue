@@ -8,7 +8,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<main class="_spacer" style="--MI_SPACER-w: 760px; --MI_SPACER-min: 20px;">
 		<article :class="$style.document">
 			<header :class="$style.hero">
-				<img src="/client-assets/dmsky-emblem.png" alt="" :class="$style.emblem"/>
+				<img src="/client-assets/dmsky-icon.svg" alt="" :class="$style.emblem"/>
 				<div>
 					<p :class="$style.eyebrow">{{ i18n.ts._dmsky.designLabel }}</p>
 					<h1>{{ i18n.ts.termsOfService }}</h1>

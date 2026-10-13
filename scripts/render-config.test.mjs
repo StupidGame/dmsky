@@ -48,6 +48,15 @@ test('missing or unsafe deployment settings fail before startup', () => {
 	assert.throws(() => createRenderConfig({ ...env, PORT: '0' }), /TCP port/);
 });
 
+test('Discord login is optional and requires both credentials', () => {
+	assert.equal(createRenderConfig(env).discord, undefined);
+	const config = createRenderConfig({ ...env, DMSKY_DISCORD_CLIENT_ID: '123456789012345678', DMSKY_DISCORD_CLIENT_SECRET: 'test-discord-secret' });
+	assert.deepEqual(config.discord, { clientId: '123456789012345678', clientSecret: 'test-discord-secret' });
+	assert.match(renderYaml(config), /clientId: "123456789012345678"/);
+	assert.throws(() => createRenderConfig({ ...env, DMSKY_DISCORD_CLIENT_ID: '123456789012345678' }), /Set both/);
+	assert.throws(() => createRenderConfig({ ...env, DMSKY_DISCORD_CLIENT_SECRET: 'test-discord-secret' }), /Set both/);
+});
+
 test('startup writes a private config file without printing credentials', () => {
 	const workdir = mkdtempSync(join(tmpdir(), 'dmsky-render-'));
 	try {

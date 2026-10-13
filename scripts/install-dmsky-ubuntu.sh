@@ -18,32 +18,43 @@ readonly DB_USER='dmsky'
 domain=''
 email=''
 duckdns_token_file=''
+discord_enabled=false
+discord_client_id=''
+discord_client_secret=''
+discord_client_secret_file=''
 check_only=false
 
 usage() {
 	cat <<'EOF'
-Usage: sudo bash scripts/install-dmsky-ubuntu.sh [--domain example.com] [--email admin@example.com] [--duckdns-token-file /root/duckdns-token] [--check]
+Usage: sudo bash scripts/install-dmsky-ubuntu.sh [--domain example.com] [--email admin@example.com] [--duckdns-token-file /root/duckdns-token] [--discord] [--discord-client-id ID] [--discord-client-secret-file /root/discord-secret] [--check]
 
 Installs DMSKY from the public develop branch on a fresh Ubuntu 24.04 server.
 It sets up PostgreSQL, Redis, Node.js 26, pnpm, systemd, Nginx and Let's Encrypt.
 Use --duckdns-token-file with a subdomain under duckdns.org to configure free dynamic DNS.
 Other domains must already resolve to this server. Open ports 80 and 443 first.
+--discord enables Discord login and prompts for the client ID and secret (hidden input).
+For unattended setup, supply --discord-client-id and --discord-client-secret-file together.
+Register https://<domain>/auth/discord/callback in the Discord Developer Portal first.
+The secret file must be owned by root and have no group/other permissions.
 --check runs the non-mutating host checks only.
 EOF
 }
 
 while (($#)); do
 	case "$1" in
-		--domain|--email|--duckdns-token-file)
+		--domain|--email|--duckdns-token-file|--discord-client-id|--discord-client-secret-file)
 			(($# >= 2)) || { usage >&2; exit 2; }
 			case "$1" in
 				--domain) domain=$2 ;;
 				--email) email=$2 ;;
 				--duckdns-token-file) duckdns_token_file=$2 ;;
+				--discord-client-id) discord_client_id=$2; discord_enabled=true ;;
+				--discord-client-secret-file) discord_client_secret_file=$2; discord_enabled=true ;;
 			esac
 			shift 2
 			;;
 		--check) check_only=true; shift ;;
+		--discord) discord_enabled=true; shift ;;
 		--help|-h) usage; exit 0 ;;
 		*) usage >&2; exit 2 ;;
 	esac
@@ -87,6 +98,26 @@ if [[ -n $duckdns_token_file ]]; then
 	(( (8#$duckdns_mode & 077) == 0 )) || fail 'The DuckDNS token file must not be readable by other users.'
 	duckdns_token=$(<"$duckdns_token_file")
 	[[ $duckdns_token =~ ^[A-Za-z0-9-]{16,128}$ ]] || fail 'The DuckDNS token file contains an invalid token.'
+fi
+
+if $discord_enabled; then
+	if [[ -z $discord_client_id ]]; then
+		[[ -t 0 ]] || fail 'Provide --discord-client-id for unattended setup.'
+		read -r -p 'Discord OAuth2 client ID: ' discord_client_id
+	fi
+	[[ $discord_client_id =~ ^[0-9]{17,20}$ ]] || fail 'Enter a valid Discord client ID.'
+	if [[ -n $discord_client_secret_file ]]; then
+		[[ -f $discord_client_secret_file && ! -L $discord_client_secret_file ]] || fail 'The Discord secret file must be a regular file.'
+		[[ $(stat -c '%u' "$discord_client_secret_file") == 0 ]] || fail 'The Discord secret file must be owned by root.'
+		discord_mode=$(stat -c '%a' "$discord_client_secret_file")
+		(( (8#$discord_mode & 077) == 0 )) || fail 'The Discord secret file must not be readable by other users.'
+		discord_client_secret=$(<"$discord_client_secret_file")
+	else
+		[[ -t 0 ]] || fail 'Provide --discord-client-secret-file for unattended setup.'
+		read -r -s -p 'Discord OAuth2 client secret (hidden): ' discord_client_secret
+		printf '\n'
+	fi
+	[[ $discord_client_secret =~ ^[A-Za-z0-9_-]{16,256}$ ]] || fail 'Enter a valid Discord client secret.'
 fi
 
 step 'Installing base packages'
@@ -150,6 +181,10 @@ id: 'aidx'
 proxyRemoteFiles: true
 signToActivityPubGet: true
 EOF
+if $discord_enabled; then
+	printf "discord:\n  clientId: '%s'\n  clientSecret: '%s'\n" "$discord_client_id" "$discord_client_secret" >> "$APP_DIR/.config/default.yml"
+	unset discord_client_secret
+fi
 chown "$APP_USER:$APP_USER" "$APP_DIR/.config/default.yml"
 printf '%s\n' "$setup_password" > /root/dmsky-setup-password
 
@@ -244,3 +279,7 @@ certbot --nginx --non-interactive --agree-tos --redirect --email "$email" -d "$d
 printf '\nDMSKY is available at https://%s/\n' "$domain"
 printf 'Initial setup password: /root/dmsky-setup-password (root only)\n'
 printf 'After creating the admin account, set Repository URL to https://github.com/StupidGame/dmsky in /admin/settings.\n'
+if $discord_enabled; then
+	printf 'Discord login enabled. OAuth2 redirect URI: https://%s/auth/discord/callback\n' "$domain"
+	printf 'Link each existing account under Settings > Security before using Discord login.\n'
+fi

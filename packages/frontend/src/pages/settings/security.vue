@@ -24,6 +24,24 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 		<X2fa/>
 
+		<SearchMarker :keywords="['discord', 'login']">
+			<FormSection>
+				<template #label><SearchLabel>{{ i18n.ts._discordLogin.title }}</SearchLabel></template>
+				<div class="_gaps_s">
+					<p>{{ i18n.ts._discordLogin.description }}</p>
+					<MkInfo v-if="discordResult" :warn="discordResult !== 'connected'">{{ discordResult === 'connected' ? i18n.ts._discordLogin.connected : i18n.ts._discordLogin.failed }}</MkInfo>
+					<template v-if="discordStatus">
+						<p>{{ discordStatus.connected ? i18n.ts._discordLogin.connected : i18n.ts._discordLogin.notConnected }}</p>
+						<MkButton v-if="discordStatus.connected" danger :disabled="discordBusy" @click="updateDiscord('disconnect')">{{ i18n.ts._discordLogin.disconnect }}</MkButton>
+						<MkButton v-else-if="discordStatus.enabled" primary :disabled="discordBusy" @click="updateDiscord('connect')"><i class="ti ti-brand-discord" aria-hidden="true"></i> {{ i18n.ts._discordLogin.connect }}</MkButton>
+						<MkInfo v-if="!discordStatus.enabled">{{ i18n.ts._discordLogin.disabled }}</MkInfo>
+					</template>
+					<MkInfo v-else-if="discordStatusFailed" warn>{{ i18n.ts._discordLogin.failed }}</MkInfo>
+					<MkLoading v-else/>
+				</div>
+			</FormSection>
+		</SearchMarker>
+
 		<SearchMarker :keywords="['signin', 'login', 'history', 'log']">
 			<FormSection>
 				<template #label><SearchLabel>{{ i18n.ts.signinHistory }}</SearchLabel></template>
@@ -57,7 +75,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { computed, markRaw } from 'vue';
+import { computed, markRaw, onMounted, ref } from 'vue';
 import X2fa from './2fa.vue';
 import FormSection from '@/components/form/section.vue';
 import FormSlot from '@/components/form/slot.vue';
@@ -69,6 +87,55 @@ import { i18n } from '@/i18n.js';
 import { definePage } from '@/page.js';
 import MkFeatureBanner from '@/components/MkFeatureBanner.vue';
 import { Paginator } from '@/utility/paginator.js';
+import MkInfo from '@/components/MkInfo.vue';
+import { $i } from '@/i.js';
+import { discordAuth } from '@/utility/discord-auth.js';
+
+const discordStatus = ref<{ enabled: boolean; connected: boolean; } | null>(null);
+const discordStatusFailed = ref(false);
+const discordBusy = ref(false);
+const discordResult = ref(new URLSearchParams(window.location.search).get('discord'));
+
+async function loadDiscordStatus(): Promise<void> {
+	try {
+		discordStatus.value = await discordAuth('status', { i: $i!.token });
+	} catch {
+		discordStatusFailed.value = true;
+	}
+}
+
+async function updateDiscord(action: 'connect' | 'disconnect'): Promise<void> {
+	const auth = await os.authenticateDialog();
+	if (auth.canceled) return;
+	discordResult.value = null;
+	discordBusy.value = true;
+	try {
+		const result = await discordAuth<{ url: string }>(action, {
+			i: $i!.token,
+			password: auth.result.password,
+			token: auth.result.token,
+		});
+		if (action === 'connect') {
+			window.location.assign(result.url);
+		} else {
+			await loadDiscordStatus();
+			os.success();
+		}
+	} catch {
+		await os.alert({ type: 'error', text: i18n.ts._discordLogin.failed });
+	} finally {
+		discordBusy.value = false;
+	}
+}
+
+onMounted(() => {
+	if (discordResult.value) {
+		const currentUrl = new URL(window.location.href);
+		currentUrl.searchParams.delete('discord');
+		window.history.replaceState(window.history.state, '', currentUrl);
+	}
+	loadDiscordStatus();
+});
 
 const paginator = markRaw(new Paginator('i/signin-history', {
 	limit: 5,

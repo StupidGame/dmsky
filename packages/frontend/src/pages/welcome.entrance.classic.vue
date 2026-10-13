@@ -10,9 +10,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 	<div :class="$style.shape1"></div>
 	<div :class="$style.shape2"></div>
 	<div :class="$style.logoWrapper">
-		<img src="/client-assets/dmsky-emblem.png" alt="" :class="$style.emblem"/>
+		<img src="/client-assets/dmsky-icon.svg" alt="" :class="$style.emblem"/>
 		<div :class="$style.poweredBy">{{ i18n.ts._dmsky.designLabel }} · {{ i18n.ts._dmsky.poweredBy }}</div>
-		<img :src="misskeysvg" :class="$style.misskey"/>
+		<img :src="dmskyWordmark" alt="DMSKY" :class="$style.misskey"/>
 	</div>
 	<div :class="$style.contents">
 		<MkVisitorDashboard/>
@@ -34,7 +34,7 @@ import { ref } from 'vue';
 import * as Misskey from 'misskey-js';
 import XTimeline from './welcome.timeline.vue';
 import MkMarqueeText from '@/components/MkMarqueeText.vue';
-import misskeysvg from '/client-assets/misskey.svg';
+import dmskyWordmark from '/client-assets/misskey.svg';
 import { misskeyApiGet } from '@/utility/misskey-api.js';
 import MkVisitorDashboard from '@/components/MkVisitorDashboard.vue';
 import { getProxiedImageUrl } from '@/utility/media-proxy.js';

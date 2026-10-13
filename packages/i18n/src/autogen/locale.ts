@@ -1354,6 +1354,44 @@ export interface Locale extends ILocale {
          */
         "termsChangesBody": string;
     };
+    "_discordLogin": {
+        /**
+         * Discordログイン
+         */
+        "title": string;
+        /**
+         * Discordを連携すると、Discordでこのアカウントにログインできます。連携・解除にはパスワードと、有効な場合は二要素認証が必要です。
+         */
+        "description": string;
+        /**
+         * 初めて使う場合は、通常の方法でログインし、設定 → セキュリティでDiscordを連携してください。
+         */
+        "signinDescription": string;
+        /**
+         * Discordを連携する
+         */
+        "connect": string;
+        /**
+         * Discordの連携を解除する
+         */
+        "disconnect": string;
+        /**
+         * Discordが連携されています。
+         */
+        "connected": string;
+        /**
+         * Discordは連携されていません。
+         */
+        "notConnected": string;
+        /**
+         * サーバー管理者がDiscordログインを有効にしていません。
+         */
+        "disabled": string;
+        /**
+         * Discordの認証に失敗しました。連携状態と認証情報を確認し、最初からやり直してください。
+         */
+        "failed": string;
+    };
     /**
      * 始める
      */

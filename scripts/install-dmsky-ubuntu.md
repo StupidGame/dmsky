@@ -13,3 +13,26 @@ sudo bash install-dmsky-ubuntu.sh --domain example.com --email admin@example.com
 ```
 
 インストール後、`/root/dmsky-setup-password` のパスワードで初期管理者を作成します。その後、管理画面の「リポジトリURL」に `https://github.com/StupidGame/dmsky` を設定してください。設定ファイルは `/var/lib/dmsky/app/.config/default.yml` に作成されます。更新時はこのスクリプトを再実行せず、バックアップを取得してから Git と pnpm で更新してください。
+
+## Discordログインを設定する
+
+[Discord Developer Portal](https://discord.com/developers/applications) でApplicationを作り、OAuth2のRedirectsに `https://example.com/auth/discord/callback` を登録します。`example.com` は公開ドメインに置き換えます。Botは不要です。
+
+対話形式で設定する場合は `--discord` を追加します。Client IDとClient Secretを尋ねます。Secretは非表示で入力し、アプリユーザーだけが読める `.config/default.yml` に保存します。
+
+```bash
+sudo bash install-dmsky-ubuntu.sh --domain example.com --email admin@example.com --discord
+```
+
+無人導入ではClient IDと、root所有・権限`0600`のSecretファイルを指定します。Secret自体をコマンド引数に渡しません。
+
+```bash
+sudo install -m 0600 /dev/null /root/dmsky-discord-secret
+sudo nano /root/dmsky-discord-secret
+# Client Secretを1行だけ保存する
+sudo bash install-dmsky-ubuntu.sh --domain example.com --email admin@example.com \
+  --discord-client-id 123456789012345678 \
+  --discord-client-secret-file /root/dmsky-discord-secret
+```
+
+DuckDNSを使う場合は `--duckdns-token-file` と併用できます。Discordの設定を省略した場合、Discordログインは無効です。導入後、通常の方法でログインして **設定 → セキュリティ** でアカウントを連携します。既存環境への設定追加は [README](../README.md#discordログインの設定) の手順を使い、インストーラーを再実行しないでください。

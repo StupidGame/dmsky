@@ -59,7 +59,15 @@ export function createRenderConfig(env) {
 	if (!Number.isInteger(redisDatabase) || redisDatabase < 0) {
 		throw new Error('REDIS_URL has an invalid database number');
 	}
+	let discord;
+	if (env.DMSKY_DISCORD_CLIENT_ID || env.DMSKY_DISCORD_CLIENT_SECRET) {
+		if (!/^\d{17,20}$/.test(env.DMSKY_DISCORD_CLIENT_ID ?? '') || !/^[A-Za-z0-9_-]{16,256}$/.test(env.DMSKY_DISCORD_CLIENT_SECRET ?? '')) {
+			throw new Error('Set both DMSKY_DISCORD_CLIENT_ID and DMSKY_DISCORD_CLIENT_SECRET to valid OAuth2 credentials');
+		}
+		discord = { clientId: env.DMSKY_DISCORD_CLIENT_ID, clientSecret: env.DMSKY_DISCORD_CLIENT_SECRET };
+	}
 	return {
+		...(discord ? { discord } : {}),
 		url: parseOrigin(env.DMSKY_URL || env.RENDER_EXTERNAL_URL),
 		port: parsePort(env.PORT || '10000', 'PORT'),
 		setupPassword: env.DMSKY_SETUP_PASSWORD,

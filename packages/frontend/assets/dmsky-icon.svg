@@ -1,0 +1,16 @@
+<!-- SPDX-FileCopyrightText: 2026 DMSKY contributors -->
+<!-- SPDX-License-Identifier: AGPL-3.0-only -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="DMSKY">
+  <defs>
+    <linearGradient id="circuit" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#8bf6ff"/>
+      <stop offset=".5" stop-color="#22c8f4"/>
+      <stop offset="1" stop-color="#407dff"/>
+    </linearGradient>
+  </defs>
+  <path fill="#07152a" d="M0 0h512v512H0z"/>
+  <path fill="#102d49" stroke="url(#circuit)" stroke-width="14" stroke-linejoin="round" d="m256 66 165 95v190l-165 95-165-95V161z"/>
+  <path fill="url(#circuit)" d="m256 135 30 69 74-8-43 60 43 60-74-8-30 69-30-69-74 8 43-60-43-60 74 8z"/>
+  <path fill="#e4fdff" d="m256 226 26 15v30l-26 15-26-15v-30z"/>
+  <path fill="none" stroke="#f3c567" stroke-width="9" stroke-linecap="round" d="m239 91 17-10 17 10m-34 330 17 10 17-10"/>
+</svg>
