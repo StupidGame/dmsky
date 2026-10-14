@@ -8,6 +8,8 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 const require = createRequire(new URL('../packages/backend/package.json', import.meta.url));
 const sharp = require('sharp');
+sharp.concurrency(1);
+sharp.cache({ memory: 8, files: 0, items: 4 });
 const source = await readFile(new URL('../packages/frontend/assets/dmsky-icon.svg', import.meta.url));
 const assets = new URL('../packages/backend/assets/', import.meta.url);
 for (const [name, size] of [['favicon.png', 32], ['apple-touch-icon.png', 180], ['icons/192.png', 192], ['icons/512.png', 512], ['splash.png', 300]]) {
@@ -15,7 +17,8 @@ for (const [name, size] of [['favicon.png', 32], ['apple-touch-icon.png', 180], 
 }
 
 const sizes = [16, 32, 48];
-const frames = await Promise.all(sizes.map(size => sharp(source).resize(size, size).png().toBuffer()));
+const frames = [];
+for (const size of sizes) frames.push(await sharp(source).resize(size, size).png().toBuffer());
 const header = Buffer.alloc(6 + sizes.length * 16);
 header.writeUInt16LE(1, 2);
 header.writeUInt16LE(sizes.length, 4);

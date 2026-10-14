@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div v-if="instance" :class="$style.root">
 	<div :class="[$style.main, $style.panel]">
 		<img src="/client-assets/dmsky-icon.svg" alt="" :class="$style.mainIcon"/>
-		<button class="_button _acrylic" :class="$style.mainMenu" @click="showMenu"><i class="ti ti-dots"></i></button>
+		<button class="_button _acrylic" :class="$style.mainMenu" :aria-label="i18n.ts.more" @click="showMenu"><i class="ti ti-dots" aria-hidden="true"></i></button>
 		<div :class="$style.mainFg">
 			<h1 :class="$style.mainTitle">
 				<!-- 背景色によってはロゴが見えなくなるのでとりあえず無効に -->
@@ -24,7 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkInfo v-else-if="instance.federation === 'none'" warn>{{ i18n.ts.federationDisabled }}</MkInfo>
 			</div>
 			<div class="_gaps_s" :class="$style.mainActions">
-				<MkButton :class="$style.mainAction" full rounded gradate data-testid="signup" style="margin-right: 12px;" @click="signup()">{{ i18n.ts.joinThisServer }}</MkButton>
+				<MkButton :class="$style.mainAction" full rounded gradate data-testid="signup" @click="signup()">{{ i18n.ts.joinThisServer }}</MkButton>
 				<MkButton :class="$style.mainAction" full rounded type="a" target="_blank" rel="noopener" href="https://misskey-hub.net/servers/">{{ i18n.ts.exploreOtherServers }}</MkButton>
 				<MkButton :class="$style.mainAction" full rounded data-testid="signin" @click="signin()">{{ i18n.ts.login }}</MkButton>
 			</div>
@@ -178,6 +178,49 @@ function showMenu(ev: PointerEvent) {
 
 .mainAction {
 	line-height: 28px;
+}
+
+:global(html.dmsky-theme) {
+	.panel {
+		border: 3px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
+		border-radius: 6px;
+		box-shadow: inset 0 0 0 1px var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), inset 0 0 0 4px var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg)), 0 4px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+	}
+
+	.main {
+		background: linear-gradient(160deg, var(--MI_THEME-panelHeaderBg), var(--MI_THEME-panel) 65%);
+	}
+
+	.mainIcon {
+		filter: none;
+	}
+
+	.mainMenu {
+		border: 1px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
+		border-radius: 4px;
+	}
+
+	.mainTitle {
+		padding-bottom: 16px;
+		color: var(--MI_THEME-fgHighlighted);
+	}
+
+	.statsItem {
+		padding: 18px 20px;
+		background: linear-gradient(160deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
+		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+	}
+
+	.statsItemLabel { color: inherit; }
+	.statsItemCount { color: var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)); }
+
+	.tlHeader {
+		margin: 4px;
+		border-bottom: 2px solid var(--MI_THEME-dmskyTrim, var(--MI_THEME-accent));
+		background: linear-gradient(160deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
+		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+		font-weight: bold;
+	}
 }
 
 .disclosure {

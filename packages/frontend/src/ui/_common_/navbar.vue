@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div :class="[$style.root, { [$style.iconOnly]: iconOnly }]">
 	<div :class="$style.body">
 		<div :class="$style.top">
-			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" @click="openInstanceMenu">
+			<button v-tooltip.noDelay.right="instance.name ?? i18n.ts.instance" class="_button" :class="$style.instance" :aria-label="instance.name ?? i18n.ts.instance" @click="openInstanceMenu">
 				<img :src="instance.iconUrl || '/client-assets/dmsky-icon.svg'" alt="" :class="$style.instanceIcon" style="view-transition-name: navbar-serverIcon;"/>
 				<img v-if="instance.iconUrl" src="/client-assets/dmsky-icon.svg" alt="" :class="$style.brandEmblem"/>
 			</button>
@@ -852,5 +852,62 @@ function menuEdit() {
 	.subButtons {
 		left: var(--nav-icon-only-width);
 	}
+}
+:global(html.dmsky-theme) .root {
+	.body {
+		border-right: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
+		background: linear-gradient(180deg, var(--MI_THEME-panelHeaderBg), var(--MI_THEME-navBg));
+	}
+
+	.item {
+		isolation: isolate;
+		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+	}
+
+	.item::before, .item:hover::before, .item.active::before, .item:focus::before {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		inset: 3px 10px;
+		width: auto;
+		height: auto;
+		aspect-ratio: auto;
+		margin: 0;
+		border: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
+		border-radius: 4px;
+		background: linear-gradient(155deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
+		box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), 0 2px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+		pointer-events: none;
+	}
+
+	.item:hover, .item:focus, .item:focus-visible {
+		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+
+		&::before { border-color: var(--MI_THEME-dmskyTrim, var(--MI_THEME-accent)); }
+	}
+
+	.item.active {
+		color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent));
+		font-weight: bold;
+
+		&::before {
+			border-color: var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA));
+			background: linear-gradient(155deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)));
+		}
+	}
+
+	.item:focus-visible {
+		outline: 2px solid var(--MI_THEME-focus);
+		outline-offset: -2px;
+	}
+
+	.post::before {
+		border: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
+		border-radius: 4px;
+		background: linear-gradient(155deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)));
+		box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), 0 2px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+	}
+
+	.post, .postIcon { color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent)); }
 }
 </style>
