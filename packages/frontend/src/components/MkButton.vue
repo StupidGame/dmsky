@@ -131,6 +131,8 @@ function onMousedown(evt: MouseEvent): void {
 </script>
 
 <style lang="scss" module>
+@use '../dmsky';
+
 .root {
 	position: relative;
 	z-index: 1; // 他コンポーネントのbox-shadowに隠されないようにするため
@@ -293,36 +295,39 @@ function onMousedown(evt: MouseEvent): void {
 }
 
 :global(html.dmsky-theme) .root:not(.transparent):not(.asLike):not(.danger) {
-	border: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-	border-radius: 4px;
-	background: linear-gradient(160deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
-	color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
-	box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), inset 0 0 0 1px var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg)), 0 3px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+	@include dmsky.frame;
+	color: var(--MI_THEME-dmskyScreenFg);
 	font-weight: bold;
+	text-shadow: 0 1px 2px var(--MI_THEME-dmskyFrameShadow);
 
 	&::before {
 		content: '';
 		position: absolute;
 		top: 0;
-		left: 14%;
-		right: 14%;
+		left: 16%;
+		right: 16%;
 		height: 2px;
-		background: var(--MI_THEME-dmskyTrim, var(--MI_THEME-accent));
+		background: var(--MI_THEME-dmskyTrim);
+		box-shadow: 0 0 6px var(--MI_THEME-dmskyTrim);
 		pointer-events: none;
 	}
 
 	&:not(:disabled):hover {
-		background: linear-gradient(160deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), color-mix(in srgb, var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)) 75%, var(--MI_THEME-dmskyTrim, var(--MI_THEME-accent))));
+		border-color: var(--MI_THEME-dmskyTrim);
 	}
 
 	&.primary, &.gradate, &.active {
-		background: linear-gradient(160deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)));
-		color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent)) !important;
+		@include dmsky.selected;
+		color: var(--MI_THEME-dmskyActiveFg) !important;
+		text-shadow: 0 1px 0 var(--MI_THEME-dmskyActiveHighlight);
 
-		&::before { background: var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)); }
+		&::before {
+			background: var(--MI_THEME-dmskyActiveHighlight);
+			box-shadow: 0 0 6px var(--MI_THEME-dmskyActive);
+		}
 
 		&:not(:disabled):hover {
-			background: linear-gradient(160deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), color-mix(in srgb, var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)) 75%, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB))));
+			border-color: var(--MI_THEME-dmskyActiveHighlight);
 		}
 	}
 

@@ -299,4 +299,26 @@ onUnmounted(() => {
 		}
 	}
 }
+
+:global(html.dmsky-theme) {
+	.root {
+		background: var(--MI-dmsky-screen);
+		color: var(--MI_THEME-dmskyScreenFg);
+		border-bottom: 1px solid var(--MI_THEME-dmskyTrim);
+		box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyFrameHighlight), 0 2px 10px color-mix(in srgb, var(--MI_THEME-dmskyTrim) 15%, transparent);
+	}
+
+	.titleIcon {
+		color: var(--MI_THEME-dmskyTrim);
+	}
+
+	.title {
+		color: var(--MI_THEME-dmskyActiveHighlight);
+	}
+
+	.button:hover, .button.highlighted {
+		color: var(--MI_THEME-dmskyTrim);
+		background: color-mix(in srgb, var(--MI_THEME-dmskyTrim) 12%, transparent);
+	}
+}
 </style>

@@ -186,4 +186,26 @@ $widgets-hide-threshold: 1090px;
 		display: none;
 	}
 }
+
+:global(html.dmsky-theme) {
+	.root {
+		background: var(--MI_THEME-bg);
+		background-image: radial-gradient(ellipse at 70% 0, color-mix(in srgb, var(--MI_THEME-accent) 16%, transparent), transparent 65%), var(--MI-dmsky-grid);
+		background-size: auto, 64px 64px, 64px 64px;
+	}
+
+	.sidebar {
+		border-right-color: var(--MI_THEME-dmskyTrim);
+	}
+
+	.contents.withSidebarAndTitlebar {
+		border-radius: 0;
+		background: transparent;
+	}
+
+	.widgets {
+		border-left-color: var(--MI_THEME-dmskyTrim);
+		background: color-mix(in srgb, var(--MI_THEME-panel) 85%, transparent);
+	}
+}
 </style>

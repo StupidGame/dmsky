@@ -11,6 +11,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 			:ref="(el) => tabRefs[t.key] = (el as HTMLElement)"
 			v-tooltip.noDelay="t.title"
 			class="_button"
+			:aria-label="t.title"
+			:aria-pressed="t.key != null && t.key === props.tab"
 			:class="[$style.tab, {
 				[$style.active]: t.key != null && t.key === props.tab,
 				[$style.animate]: prefer.s.animation
@@ -204,6 +206,8 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" module>
+@use '../../dmsky';
+
 .tabs {
 	display: block;
 	position: relative;
@@ -278,6 +282,42 @@ onUnmounted(() => {
 	.tabHighlight {
 		left: anchor(var(--tabAnchorName) start);
 		width: anchor-size(var(--tabAnchorName) width);
+	}
+}
+
+:global(html.dmsky-theme) {
+	.tabsInner {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 0 3px;
+	}
+
+	.tab {
+		@include dmsky.frame;
+		flex-shrink: 0;
+		height: calc(100% - 12px);
+		min-height: 28px;
+		padding: 0 10px;
+		color: var(--MI_THEME-dmskyScreenFg);
+		font-weight: bold;
+		opacity: 1;
+
+		&:hover {
+			border-color: var(--MI_THEME-dmskyTrim);
+		}
+
+		&.active {
+			@include dmsky.selected;
+		}
+
+		&:focus-visible {
+			outline-offset: 1px;
+		}
+	}
+
+	.tabHighlight {
+		display: none;
 	}
 }
 </style>

@@ -200,6 +200,8 @@ function menuEdit() {
 </script>
 
 <style lang="scss" module>
+@use '../../dmsky';
+
 .root {
 	--nav-width: 250px;
 	--nav-icon-only-width: 80px;
@@ -855,16 +857,28 @@ function menuEdit() {
 }
 :global(html.dmsky-theme) .root {
 	.body {
-		border-right: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-		background: linear-gradient(180deg, var(--MI_THEME-panelHeaderBg), var(--MI_THEME-navBg));
+		border-right: 1px solid var(--MI_THEME-dmskyTrim);
+		background: linear-gradient(180deg, var(--MI_THEME-dmskyScreen), var(--MI_THEME-dmskyFrameShadow) 40%);
+		color: var(--MI_THEME-dmskyScreenFg);
+		box-shadow: inset -4px 0 0 var(--MI_THEME-dmskyFrameShadow);
+	}
+
+	.top {
+		border-bottom: 1px solid var(--MI_THEME-divider);
+	}
+
+	.instanceIcon {
+		filter: drop-shadow(0 0 8px color-mix(in srgb, var(--MI_THEME-dmskyTrim) 40%, transparent));
 	}
 
 	.item {
 		isolation: isolate;
-		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+		color: var(--MI_THEME-dmskyScreenFg);
+		font-weight: bold;
 	}
 
 	.item::before, .item:hover::before, .item.active::before, .item:focus::before {
+		@include dmsky.frame;
 		content: '';
 		position: absolute;
 		z-index: -1;
@@ -873,26 +887,21 @@ function menuEdit() {
 		height: auto;
 		aspect-ratio: auto;
 		margin: 0;
-		border: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-		border-radius: 4px;
-		background: linear-gradient(155deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
-		box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), 0 2px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+		clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
 		pointer-events: none;
 	}
 
 	.item:hover, .item:focus, .item:focus-visible {
-		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+		color: var(--MI_THEME-dmskyScreenFg);
 
-		&::before { border-color: var(--MI_THEME-dmskyTrim, var(--MI_THEME-accent)); }
+		&::before { border-color: var(--MI_THEME-dmskyTrim); }
 	}
 
 	.item.active {
-		color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent));
-		font-weight: bold;
+		color: var(--MI_THEME-dmskyActiveFg);
 
 		&::before {
-			border-color: var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA));
-			background: linear-gradient(155deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)));
+			@include dmsky.selected;
 		}
 	}
 
@@ -901,13 +910,17 @@ function menuEdit() {
 		outline-offset: -2px;
 	}
 
-	.post::before {
-		border: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-		border-radius: 4px;
-		background: linear-gradient(155deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)));
-		box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), 0 2px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+	.post::before, .post:hover::before, .post.active::before {
+		@include dmsky.frame;
+		@include dmsky.selected;
+		box-sizing: border-box;
 	}
 
-	.post, .postIcon { color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent)); }
+	.post, .postIcon { color: var(--MI_THEME-dmskyActiveFg); }
+
+	.account {
+		background: linear-gradient(90deg, var(--MI_THEME-accentedBg), transparent);
+		border-top: 1px solid var(--MI_THEME-divider);
+	}
 }
 </style>

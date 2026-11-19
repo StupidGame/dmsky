@@ -61,12 +61,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { defineAsyncComponent, ref } from 'vue';
 import * as Misskey from 'misskey-js';
 import { instanceName } from '@@/js/config.js';
-import type { MenuItem } from '@/types/menu.js';
-import XSigninDialog from '@/components/MkSigninDialog.vue';
-import XSignupDialog from '@/components/MkSignupDialog.vue';
 import MkButton from '@/components/MkButton.vue';
 import MkStreamingNotesTimeline from '@/components/MkStreamingNotesTimeline.vue';
 import MkInfo from '@/components/MkInfo.vue';
@@ -75,8 +72,9 @@ import { misskeyApi } from '@/utility/misskey-api.js';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
 import MkNumber from '@/components/MkNumber.vue';
-import XActiveUsersChart from '@/components/MkVisitorDashboard.ActiveUsersChart.vue';
 import { openInstanceMenu } from '@/ui/_common_/common.js';
+
+const XActiveUsersChart = defineAsyncComponent(() => import('@/components/MkVisitorDashboard.ActiveUsersChart.vue'));
 
 const stats = ref<Misskey.entities.StatsResponse | null>(null);
 
@@ -86,16 +84,16 @@ if (instance.clientOptions.showActivitiesForVisitor !== false) {
 	});
 }
 
-function signin() {
-	const { dispose } = os.popup(XSigninDialog, {
+async function signin() {
+	const { dispose } = await os.popupAsyncWithDialog(import('@/components/MkSigninDialog.vue').then((x) => x.default), {
 		autoSet: true,
 	}, {
 		closed: () => dispose(),
 	});
 }
 
-function signup() {
-	const { dispose } = os.popup(XSignupDialog, {
+async function signup() {
+	const { dispose } = await os.popupAsyncWithDialog(import('@/components/MkSignupDialog.vue').then((x) => x.default), {
 		autoSet: true,
 	}, {
 		closed: () => dispose(),
@@ -108,6 +106,8 @@ function showMenu(ev: PointerEvent) {
 </script>
 
 <style lang="scss" module>
+@use '../dmsky';
+
 .root {
 	position: relative;
 	display: flex;
@@ -182,13 +182,11 @@ function showMenu(ev: PointerEvent) {
 
 :global(html.dmsky-theme) {
 	.panel {
-		border: 3px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-		border-radius: 6px;
-		box-shadow: inset 0 0 0 1px var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), inset 0 0 0 4px var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg)), 0 4px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+		@include dmsky.frame(linear-gradient(165deg, var(--MI_THEME-panelHighlight), var(--MI_THEME-panel) 35%));
 	}
 
 	.main {
-		background: linear-gradient(160deg, var(--MI_THEME-panelHeaderBg), var(--MI_THEME-panel) 65%);
+		border-top-color: var(--MI_THEME-dmskyTrim);
 	}
 
 	.mainIcon {
@@ -206,9 +204,9 @@ function showMenu(ev: PointerEvent) {
 	}
 
 	.statsItem {
+		@include dmsky.frame;
 		padding: 18px 20px;
-		background: linear-gradient(160deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
-		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+		color: var(--MI_THEME-dmskyScreenFg);
 	}
 
 	.statsItemLabel { color: inherit; }
@@ -216,9 +214,9 @@ function showMenu(ev: PointerEvent) {
 
 	.tlHeader {
 		margin: 4px;
-		border-bottom: 2px solid var(--MI_THEME-dmskyTrim, var(--MI_THEME-accent));
-		background: linear-gradient(160deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
-		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+		border-bottom: 2px solid var(--MI_THEME-dmskyTrim);
+		background: var(--MI-dmsky-screen);
+		color: var(--MI_THEME-dmskyScreenFg);
 		font-weight: bold;
 	}
 }

@@ -61,6 +61,8 @@ misskeyApiGet('federation/instances', {
 </script>
 
 <style lang="scss" module>
+@use '../dmsky';
+
 .root {
 	height: 100cqh;
 	overflow: auto;
@@ -69,9 +71,9 @@ misskeyApiGet('federation/instances', {
 }
 
 .bg {
+	@include dmsky.backdrop;
 	position: fixed;
 	inset: 0;
-	background: linear-gradient(90deg, color-mix(in srgb, var(--MI_THEME-bg) 45%, transparent), transparent 72%), url('/client-assets/dmsky-city.png') center / cover;
 	pointer-events: none;
 }
 

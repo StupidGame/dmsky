@@ -84,6 +84,8 @@ watch(rootEl, () => {
 </script>
 
 <style lang="scss" module>
+@use '../../dmsky';
+
 .root {
 	position: relative;
 	z-index: 1;
@@ -151,47 +153,71 @@ watch(rootEl, () => {
 
 :global(html.dmsky-theme) {
 	.root {
-		border-top: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-		background: linear-gradient(180deg, var(--MI_THEME-panelHeaderBg), var(--MI_THEME-navBg));
+		gap: 5px;
+		padding: 8px max(6px, env(safe-area-inset-right, 0px)) max(8px, env(safe-area-inset-bottom, 0px)) max(6px, env(safe-area-inset-left, 0px));
+		border-top: 1px solid var(--MI_THEME-dmskyTrim);
+		background: linear-gradient(180deg, var(--MI_THEME-dmskyScreen), var(--MI_THEME-dmskyFrameShadow));
+		box-shadow: 0 -2px 14px color-mix(in srgb, var(--MI_THEME-dmskyTrim) 18%, transparent);
 	}
 
 	.item {
+		@include dmsky.frame;
+		position: relative;
 		min-width: 0;
-		padding: 10px 4px 8px;
+		min-height: 60px;
+		padding: 5px 2px;
+		color: var(--MI_THEME-dmskyScreenFg);
+		font-weight: bold;
+
+		&.active {
+			@include dmsky.selected;
+		}
+
+		&:hover {
+			border-color: var(--MI_THEME-dmskyTrim);
+		}
 
 		&:focus-visible {
 			outline: 2px solid var(--MI_THEME-focus);
-			outline-offset: -2px;
+			outline-offset: 1px;
 		}
 	}
 
 	.itemInner {
-		width: 44px;
-		max-width: 100%;
-		border: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-		border-radius: 4px;
-		box-sizing: border-box;
-		background: linear-gradient(155deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
-		color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
-		box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), 0 2px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+		position: static;
+		width: auto;
+		max-width: none;
+		aspect-ratio: auto;
+		border-radius: 0;
 	}
 
-	.item.active .itemInner, .item.post .itemInner {
-		background: linear-gradient(155deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)));
-		color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent));
+	.item .itemInner, .item.post .itemInner:hover, .item.post .itemInner:active {
+		background: transparent;
+		color: inherit;
 	}
 
-	.itemIcon { font-size: 18px; }
+	.itemIcon {
+		font-size: 23px;
+		filter: drop-shadow(0 0 3px color-mix(in srgb, var(--MI_THEME-dmskyTrim) 50%, transparent));
+	}
 
 	.itemLabel {
 		display: block;
 		max-width: 100%;
-		margin-top: 5px;
+		margin-top: 3px;
 		font-size: clamp(8px, 2.5vw, 10px);
 		line-height: 1.4;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	.itemIndicator, .itemIndicator:has(.itemIndicateValueIcon) {
+		top: -5px;
+		right: -3px;
+		bottom: auto;
+		left: auto;
+		font-size: 10px;
 	}
 }
 

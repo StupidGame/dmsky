@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+@use './dmsky';
+
 :root {
 	--MI-radius: 12px;
 	--MI-marginFull: 16px;
@@ -368,23 +370,31 @@ rt {
 }
 
 html.dmsky-theme {
-	--MI-radius: 6px;
-	background-image: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--MI_THEME-accent) 9%, transparent), transparent 36%);
+	--MI-radius: 3px;
+	--MI-dmsky-metal: linear-gradient(135deg, var(--MI_THEME-dmskyFrameShadow), var(--MI_THEME-dmskyFrameHighlight) 9%, var(--MI_THEME-dmskyFrame) 12%, var(--MI_THEME-dmskyFrameHighlight) 15%, var(--MI_THEME-dmskyFrame) 45%, var(--MI_THEME-dmskyFrameShadow) 50%, var(--MI_THEME-dmskyFrameHighlight) 88%, var(--MI_THEME-dmskyFrameShadow));
+	--MI-dmsky-screen: linear-gradient(165deg, var(--MI_THEME-dmskyScreenHighlight), var(--MI_THEME-dmskyScreen) 55%, color-mix(in srgb, var(--MI_THEME-dmskyScreen) 65%, var(--MI_THEME-dmskyFrameShadow)));
+	--MI-dmsky-gold: linear-gradient(165deg, var(--MI_THEME-dmskyActiveHighlight), var(--MI_THEME-dmskyActive) 45%, color-mix(in srgb, var(--MI_THEME-dmskyActive) 75%, var(--MI_THEME-dmskyActiveFg)) 50%, var(--MI_THEME-dmskyActive) 90%);
+	--MI-dmsky-scanlines: repeating-linear-gradient(0deg, transparent 0 3px, color-mix(in srgb, var(--MI_THEME-dmskyScreenFg) 4%, transparent) 3px 4px);
+	--MI-dmsky-grid: linear-gradient(color-mix(in srgb, var(--MI_THEME-accent) 6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--MI_THEME-accent) 6%, transparent) 1px, transparent 1px);
+	background-image: radial-gradient(ellipse at 75% 0, color-mix(in srgb, var(--MI_THEME-accent) 18%, transparent), transparent 65%);
 
 	._panel {
-		border: 1px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-		box-shadow: inset 0 1px 0 color-mix(in srgb, var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)) 35%, transparent), 0 3px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+		@include dmsky.frame(linear-gradient(165deg, var(--MI_THEME-panelHighlight), var(--MI_THEME-panel) 30%));
 	}
 
 	._buttonGradate {
-		color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent));
-		background: linear-gradient(90deg, var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)), var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)));
-		border: 1px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
-		box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), 0 3px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+		@include dmsky.frame;
+		@include dmsky.selected;
+		font-weight: bold;
 
 		&:not(:disabled):hover, &:not(:disabled):active {
-			background: linear-gradient(90deg, var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)), var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)));
+			@include dmsky.selected;
+			border-color: var(--MI_THEME-dmskyActiveHighlight);
 		}
+	}
+
+	._popup {
+		@include dmsky.frame(linear-gradient(165deg, var(--MI_THEME-panelHeaderBg), var(--MI_THEME-popup) 35%));
 	}
 }
 
