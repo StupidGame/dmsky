@@ -368,16 +368,23 @@ rt {
 }
 
 html.dmsky-theme {
-	--MI-radius: 8px;
-	background-image: radial-gradient(circle at 80% 10%, color(from var(--MI_THEME-accent) srgb r g b / 0.09), transparent 36%);
+	--MI-radius: 6px;
+	background-image: radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--MI_THEME-accent) 9%, transparent), transparent 36%);
 
 	._panel {
-		border: 1px solid var(--MI_THEME-divider);
-		box-shadow: inset 0 1px color(from var(--MI_THEME-fg) srgb r g b / 0.07), 0 10px 28px var(--MI_THEME-shadow);
+		border: 1px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
+		box-shadow: inset 0 1px 0 color-mix(in srgb, var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)) 35%, transparent), 0 3px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
 	}
 
 	._buttonGradate {
-		box-shadow: 0 0 18px color(from var(--MI_THEME-accent) srgb r g b / 0.24);
+		color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent));
+		background: linear-gradient(90deg, var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)), var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)));
+		border: 1px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
+		box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), 0 3px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+
+		&:not(:disabled):hover, &:not(:disabled):active {
+			background: linear-gradient(90deg, var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)), var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)));
+		}
 	}
 }
 

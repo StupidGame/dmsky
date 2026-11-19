@@ -48,12 +48,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<i class="ti ti-device-usb" style="font-size: medium;"></i>{{ i18n.ts.signinWithPasskey }}
 			</MkButton>
 		</div>
+		<div v-if="allowDiscord && discordEnabled">
+			<MkButton type="button" large rounded style="margin: 0 auto;" @click="signinWithDiscord">
+				<i class="ti ti-brand-discord" aria-hidden="true"></i> {{ i18n.tsx.signinWith({ x: 'Discord' }) }}
+			</MkButton>
+			<p :class="$style.discordCaption">{{ i18n.ts._discordLogin.signinDescription }}</p>
+		</div>
 	</div>
 </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { toUnicode } from 'punycode.js';
 
 import { query, extractDomain } from '@@/js/url.js';
@@ -70,10 +76,12 @@ const props = withDefaults(defineProps<{
 	message?: string,
 	openOnRemote?: OpenOnRemoteOptions,
 	initialUsername?: string;
+	allowDiscord?: boolean;
 }>(), {
 	message: '',
 	openOnRemote: undefined,
 	initialUsername: undefined,
+	allowDiscord: false,
 });
 
 const emit = defineEmits<{
@@ -84,6 +92,22 @@ const emit = defineEmits<{
 const host = toUnicode(configHost);
 
 const username = ref(props.initialUsername ?? '');
+const discordEnabled = ref(false);
+
+function signinWithDiscord(): void {
+	window.sessionStorage.setItem('dmsky.discord.returnTo', `${window.location.pathname}${window.location.search}${window.location.hash}`);
+	window.location.assign('/auth/discord/start');
+}
+
+onMounted(async () => {
+	if (!props.allowDiscord) return;
+	try {
+		const response = await window.fetch('/auth/discord/', { cache: 'no-store' });
+		if (response.ok) discordEnabled.value = (await response.json()).enabled === true;
+	} catch {
+		discordEnabled.value = false;
+	}
+});
 
 //#region Open on remote
 function openRemote(options: OpenOnRemoteOptions, targetHost?: string): void {
@@ -172,6 +196,12 @@ async function specifyHostAndOpenRemote(options: OpenOnRemoteOptions): Promise<v
 	font-size: 24px;
 	line-height: 64px;
 	border-radius: 50%;
+}
+
+.discordCaption {
+	text-align: center;
+	font-size: .8em;
+	color: var(--MI_THEME-fgTransparent);
 }
 
 .instanceManualSelectButton {

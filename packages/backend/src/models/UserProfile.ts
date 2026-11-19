@@ -149,6 +149,12 @@ export class MiUserProfile {
 	})
 	public password: string | null;
 
+	@Index('IDX_user_profile_discordId', { unique: true })
+	@Column('varchar', {
+		length: 32, nullable: true,
+	})
+	public discordId: string | null;
+
 	@Column('varchar', {
 		length: 8192, default: '',
 	})

@@ -79,6 +79,12 @@
 # Final accessible URL seen by a user.
 url: https://example.tld/
 
+# Optional Discord login. Register <url>/auth/discord/callback in Discord OAuth2.
+# Keep the secret private. Existing users link Discord under Settings > Security.
+# discord:
+#   clientId: 'YOUR_DISCORD_CLIENT_ID'
+#   clientSecret: 'YOUR_DISCORD_CLIENT_SECRET'
+
 # ONCE YOU HAVE STARTED THE INSTANCE, DO NOT CHANGE THE
 # URL SETTINGS AFTER THAT!
 

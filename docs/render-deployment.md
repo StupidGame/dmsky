@@ -13,3 +13,9 @@
 起動スクリプトは Render が渡すプライベート接続 URL と公開 URL から `.config/default.yml` を生成し、マイグレーション後に Misskey を起動します。生成したファイルはコンテナ内だけに置き、権限を `0600` にします。画像などは `/misskey/files` に保存され、Render の永続ディスクに残ります。
 
 ディスクが付いた Web サービスは 1 インスタンス構成です。デプロイ中は短時間停止します。容量が足りなくなればディスクを拡張できます。PostgreSQL とディスクのバックアップ方針は運用開始時に確認してください。
+
+## Discordログイン（任意）
+
+Webサービスの環境変数に `DMSKY_DISCORD_CLIENT_ID` と `DMSKY_DISCORD_CLIENT_SECRET` を追加してください。両方を設定すると起動スクリプトが `.config/default.yml` に反映します。片方だけの設定や不正な値は起動前にエラーになります。SecretはRenderの環境変数として管理し、`render.yaml` に実際の値を書きません。省略した場合は無効です。
+
+Discord Developer PortalでApplicationを作成し、OAuth2のRedirectsに `https://<公開ホスト>/auth/discord/callback` を登録します。反映後に、通常の方法でログインして **設定 → セキュリティ** からDiscordを連携します。詳しくは [README](../README.md#discordログインの設定) を参照してください。

@@ -292,6 +292,46 @@ function onMousedown(evt: MouseEvent): void {
 	}
 }
 
+:global(html.dmsky-theme) .root:not(.transparent):not(.asLike):not(.danger) {
+	border: 2px solid var(--MI_THEME-dmskyFrame, var(--MI_THEME-divider));
+	border-radius: 4px;
+	background: linear-gradient(160deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)));
+	color: var(--MI_THEME-dmskyScreenFg, var(--MI_THEME-fg));
+	box-shadow: inset 0 1px 0 var(--MI_THEME-dmskyFrameHighlight, var(--MI_THEME-fgHighlighted)), inset 0 0 0 1px var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg)), 0 3px 0 var(--MI_THEME-dmskyFrameShadow, var(--MI_THEME-navBg));
+	font-weight: bold;
+
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 14%;
+		right: 14%;
+		height: 2px;
+		background: var(--MI_THEME-dmskyTrim, var(--MI_THEME-accent));
+		pointer-events: none;
+	}
+
+	&:not(:disabled):hover {
+		background: linear-gradient(160deg, var(--MI_THEME-dmskyScreenHighlight, var(--MI_THEME-buttonHoverBg)), color-mix(in srgb, var(--MI_THEME-dmskyScreen, var(--MI_THEME-buttonBg)) 75%, var(--MI_THEME-dmskyTrim, var(--MI_THEME-accent))));
+	}
+
+	&.primary, &.gradate, &.active {
+		background: linear-gradient(160deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)));
+		color: var(--MI_THEME-dmskyActiveFg, var(--MI_THEME-fgOnAccent)) !important;
+
+		&::before { background: var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)); }
+
+		&:not(:disabled):hover {
+			background: linear-gradient(160deg, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB)), color-mix(in srgb, var(--MI_THEME-dmskyActive, var(--MI_THEME-buttonGradateA)) 75%, var(--MI_THEME-dmskyActiveHighlight, var(--MI_THEME-buttonGradateB))));
+		}
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--MI_THEME-focus);
+		outline-offset: 3px;
+	}
+}
+
 .ripples {
 	position: absolute;
 	z-index: 0;

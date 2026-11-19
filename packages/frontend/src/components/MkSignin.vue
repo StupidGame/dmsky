@@ -21,6 +21,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			:message="message"
 			:openOnRemote="openOnRemote"
 			:initialUsername="initialUsername"
+			:allowDiscord="autoSet"
 
 			@usernameSubmitted="onUsernameSubmitted"
 			@passkeyClick="onPasskeyLogin"

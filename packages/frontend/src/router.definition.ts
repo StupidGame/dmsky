@@ -200,6 +200,9 @@ export const ROUTE_DEF = [{
 	path: '/reset-password/:token?',
 	component: page(() => import('@/pages/reset-password.vue')),
 }, {
+	path: '/signin/discord',
+	component: page(() => import('@/pages/signin.discord.vue')),
+}, {
 	path: '/signup-complete/:code',
 	component: page(() => import('@/pages/signup-complete.vue')),
 }, {

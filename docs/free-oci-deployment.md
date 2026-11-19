@@ -37,6 +37,8 @@ sudo bash install-dmsky-ubuntu.sh --domain my-dmsky.duckdns.org --email you@exam
 
 `my-dmsky.duckdns.org` と `you@example.com` を自分の値に置き換えます。DNS の反映直後に証明書取得が失敗した場合は、DNS が VM の IP を返すまで待ち、`sudo certbot --nginx -d my-dmsky.duckdns.org` を再実行してください。途中まで作成された環境にインストーラーを再実行しないでください。
 
+Discordログインを使う場合は、インストールコマンドに `--discord` を追加するとClient IDとClient Secretを入力できます。Discord Developer PortalのOAuth2 Redirectsには `https://my-dmsky.duckdns.org/auth/discord/callback` を登録してください。無人導入のSecretファイル指定は [Ubuntuインストーラーの手順](../scripts/install-dmsky-ubuntu.md#discordログインを設定する) に記載しています。
+
 ## 4. 起動確認
 
 ```bash

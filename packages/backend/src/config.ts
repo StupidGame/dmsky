@@ -34,6 +34,7 @@ type SentryBackendConfig = {
  * 設定ファイルの型
  */
 type Source = {
+	discord?: { clientId: string; clientSecret: string; };
 	url?: string;
 	port?: number;
 	socket?: string;
@@ -132,6 +133,7 @@ type Source = {
 };
 
 export type Config = {
+	discord: { clientId: string; clientSecret: string; } | undefined;
 	url: string;
 	port: number;
 	socket: string | undefined;
@@ -290,6 +292,10 @@ export function loadConfig(): Config {
 
 	return {
 		version,
+		discord: config.discord ?? (process.env.DMSKY_DISCORD_CLIENT_ID && process.env.DMSKY_DISCORD_CLIENT_SECRET ? {
+			clientId: process.env.DMSKY_DISCORD_CLIENT_ID,
+			clientSecret: process.env.DMSKY_DISCORD_CLIENT_SECRET,
+		} : undefined),
 		publishTarballInsteadOfProvideRepositoryUrl: !!config.publishTarballInsteadOfProvideRepositoryUrl,
 		setupPassword: config.setupPassword,
 		url: url.origin,

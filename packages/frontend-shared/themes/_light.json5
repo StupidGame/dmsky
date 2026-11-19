@@ -71,6 +71,18 @@
 		codeBoolean: '#62b70c',
 		deckBg: ':darken<3<@bg',
 		htmlThemeColor: '@bg',
+
+		// DMSKY の装飾用パレット。他のテーマでは通常の配色へフォールバックする。
+		dmskyFrame: '@divider',
+		dmskyFrameHighlight: '@fgHighlighted',
+		dmskyFrameShadow: '@navBg',
+		dmskyScreen: '@buttonBg',
+		dmskyScreenHighlight: '@buttonHoverBg',
+		dmskyScreenFg: '@fg',
+		dmskyActive: '@buttonGradateA',
+		dmskyActiveHighlight: '@buttonGradateB',
+		dmskyActiveFg: '@fgOnAccent',
+		dmskyTrim: '@accent',
 	},
 
 	codeHighlighter: {
